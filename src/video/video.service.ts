@@ -8,8 +8,17 @@ import { plainToClass } from 'class-transformer';
 @Injectable()
 export class VideoService {
   prisma = new PrismaClient();
-  create(createVideoDto: CreateVideoDto) {
-    return 'This action adds a new video';
+
+  async create(createVideoDto: CreateVideoDto): Promise<VideoDto> {
+    // return 'This action adds a new video';
+    try {
+      let newVideo = await this.prisma.video.create({
+        data: createVideoDto,
+      });
+      return plainToClass(VideoDto, newVideo);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async findAll(
